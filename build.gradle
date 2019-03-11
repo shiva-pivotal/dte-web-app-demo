@@ -1,3 +1,6 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.apache.commons.io.FileUtils
+
 buildscript {
 	ext {
 		springBootVersion = '2.1.2.RELEASE'
@@ -7,6 +10,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "commons-io:commons-io:2.4"
 	}
 }
 
@@ -27,5 +31,97 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.webjars:bootstrap:4.0.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testCompile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0"
+	testCompile "org.apache.commons:commons-lang3:3.6"
+	testImplementation "org.seleniumhq.selenium:selenium-java:3.4.0"
+	testImplementation"org.testng:testng:6.8"
+	testImplementation "com.relevantcodes:extentreports:2.41.2"
+	testImplementation "org.freemarker:freemarker:2.3.23"
+	testImplementation "org.apache.poi:poi-ooxml:3.17-beta1"
+	testImplementation "io.rest-assured:rest-assured:3.0.1"
+	testImplementation "io.rest-assured:json-path:3.0.1"
+	testCompile "com.jayway.restassured:rest-assured:2.9.0"
+	testCompile "javax.mail:mail:1.4.1"
 }
+
+ext {
+	chromeDriverVersion = '2.24'
+	phantomJsVersion = '2.1.1'
+
+}
+
+task setupChromeDriver {
+	def driverOsFilenamePart
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		driverOsFilenamePart = "win32"
+	} else if (Os.isFamily(Os.FAMILY_MAC)) {
+		driverOsFilenamePart = "mac64"
+	} else if (Os.isFamily(Os.FAMILY_UNIX)) {
+		driverOsFilenamePart = Os.isArch("amd64") ? "linux64" : "linux32"
+	}
+
+	def downloadFile = file("$buildDir/webdriver/chromedriver.zip")
+	def outputDir = file("$buildDir/webdriver/chromedriver")
+
+	inputs.property("chromeDriverVersion", chromeDriverVersion)
+	outputs.dir(outputDir)
+
+	doFirst {
+		FileUtils.copyURLToFile(new URL("http://chromedriver.storage.googleapis.com/${chromeDriverVersion}/chromedriver_${driverOsFilenamePart}.zip"), downloadFile)
+		copy{
+			from(zipTree(downloadFile))
+			into(outputDir)
+		}
+	}
+}
+
+
+task testChrome {
+	finalizedBy test
+	dependsOn setupChromeDriver
+	doLast { test { systemProperty 'webdriver.chrome.driver', "${buildDir}/webdriver/chromedriver/chromedriver${Os.isFamily(Os.FAMILY_WINDOWS)?'.exe':''}"}}
+}
+
+task smokeTests(type: Test) { // we define a task with name ‘smokeTests’
+	useTestNG() {
+		useDefaultListeners = true
+	}
+
+	testLogging {
+		exceptionFormat = 'full'
+	}
+
+	//Convenience .. pipe all test results to SDOUT
+	afterTest { desc, result ->
+		println "${desc.className} ${desc.name} ${result.resultType}"
+	}
+
+	//Force tests to always run, even if they haven't been updated
+	outputs.upToDateWhen { false }
+}
+
+
+test {
+	// enable TestNG support (default is JUnit)
+	useTestNG()
+
+	//Show full exception on failure
+	testLogging {
+		exceptionFormat = 'full'
+	}
+
+	//Convenience .. pipe all test results to SDOUT
+	afterTest { desc, result ->
+		println "${desc.className} ${desc.name} ${result.resultType}"
+	}
+
+	//Force tests to always run, even if they haven't been updated
+	outputs.upToDateWhen { false }
+}
+
+
+
+
+

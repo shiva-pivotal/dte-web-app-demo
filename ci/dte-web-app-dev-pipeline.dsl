@@ -1,13 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Unit Test') {
-            steps {
-                sh '''
-                ./gradlew test
-               '''
-            }
-        }
         stage('Build') {
             steps {
                 sh '''
@@ -17,21 +10,38 @@ pipeline {
         }
         stage('Deploy Dev') {
             environment {
-                PCF_CREDS = credentials('pcfpez-student-1-creds')
+                PCF_CREDS = credentials('pcfpez-dte-dev-creds')
             }
             steps {
                 sh 'pwd'
                 sh 'ls'
                 sh 'ls build/libs'
-                sh 'cf login --skip-ssl-validation -a https://api.run.haas-81.pez.pivotal.io -u ${PCF_CREDS_USR} -p ${PCF_CREDS_PSW} -o student-1 -s student-1'
+                sh 'cf login --skip-ssl-validation -a https://api.run.haas-202.pez.pivotal.io -u ${PCF_CREDS_USR} -p ${PCF_CREDS_PSW} -o dte-demo -s dev'
                 sh 'cf push -f ci/manifest-dev.yml'
             }
         }
-        stage('Smoke Test') {
+        stage('Run Smoke Tests') {
+            parallel {
+                stage('Test On Chrome') {
+                    steps {
+                        sh '''
+                            ENV=dev BROWSER=chrome ./gradlew test
+                        '''
+                    }
+                }
+                stage('Test On FireFox') {
+                    steps {
+                        sh '''
+                            ENV=dev BROWSER=firefox ./gradlew test
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Archive Artifacts'){
             steps {
-                sh '''
-                   sh ci/smoke-test.sh
-                '''
+                 archiveArtifacts artifacts: 'build/**/*.*', fingerprint: true
             }
         }
     }

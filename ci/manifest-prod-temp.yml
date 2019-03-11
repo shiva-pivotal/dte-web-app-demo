@@ -1,7 +1,6 @@
----
 applications:
 - name: dte-web-app-demo
-  host: dte-web-app-demo-prod
+  host: dte-web-app-demo-prod-temp
   path: ../build/libs/dte-web-app-demo-0.0.1-SNAPSHOT.jar
   instances: 2
   memory: 1G

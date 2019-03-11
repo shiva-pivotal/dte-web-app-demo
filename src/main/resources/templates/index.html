@@ -13,8 +13,6 @@
 </head>
 <body>
 
-
-
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #00aeef;">
@@ -39,7 +37,7 @@
 
     <div class="jumbotron">
        
-        <h3 th:text="'Welcome DTE Energy Web app'"></h3>
+        <h3 id="welcome-statement" th:text="'Welcome DTE Energy Web app'"></h3>
 
         </br>
 
@@ -48,8 +46,7 @@
         <h6 style="font-style:italic">"Our mission is to be a premier, full-service energy and energy technology company, providing solutions to meet the needs of 21st century customers. We will operate as a fast-paced, progressive, high-performance, value-based organization."</h6>
 
         </br>
-        <p th:text="'This date example  ' + ${#dates.format(datetime, 'dd MMM yyyy HH:mm')}"></p>
-        <p> is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.
+        <p th:text="'This date example  ' + ${#dates.format(datetime, 'dd MMM yyyy HH:mm')}">is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.
             It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
     </div>
 </div>
