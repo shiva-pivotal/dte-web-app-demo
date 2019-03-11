@@ -63,7 +63,7 @@ public class DTEWebAppTest {
 
         String welcomeText = driver.findElement(By.id("welcome-statement")).getText();
 
-        Assert.assertEquals(welcomeText,"Welcome DTE Energy Web app");
+        Assert.assertEquals(welcomeText,"Welcome DTE Energy Web app V1");
     }
 
     @AfterClass(alwaysRun = true)
