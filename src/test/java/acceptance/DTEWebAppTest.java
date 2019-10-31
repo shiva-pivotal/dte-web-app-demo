@@ -27,9 +27,9 @@ public class DTEWebAppTest {
             url = "http://localhost:8087/";
         } else {
             if (tempRoute != null && !tempRoute.isEmpty() && tempRoute.equalsIgnoreCase("temp")) {
-                url = "http://dte-web-app-demo-" + environment + "-temp.run.pivotal.io/";
+                url = "http://dte-web-app-demo-" + environment + "-temp.cfapps.io/";
             } else {
-                url = "http://dte-web-app-demo-" + environment + ".run.pivotal.io/";
+                url = "http://dte-web-app-demo-" + environment + ".cfapps.io/";
             }
         }
         SetupTestDriver setupTestDriver = new SetupTestDriver("mac", browser, url);
