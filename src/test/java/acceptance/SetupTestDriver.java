@@ -20,7 +20,7 @@ public class SetupTestDriver {
     private String browser = null;
     private String baseUrl = null;
     private String os = null;
-    private static final String node = "http://192.168.0.7:4444";
+    private static final String node = "http://10.153.3.249:4444";
 
 
     public SetupTestDriver(String os, String browser, String baseUrl) throws MalformedURLException {
