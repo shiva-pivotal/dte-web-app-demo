@@ -10,13 +10,13 @@ pipeline {
         }
         stage('Deploy Dev') {
             environment {
-                PCF_CREDS = credentials('pcfpez-dte-dev-creds')
+                PCF_CREDS = credentials('pcf-pws-creds')
             }
             steps {
                 sh 'pwd'
                 sh 'ls'
                 sh 'ls build/libs'
-                sh 'cf login --skip-ssl-validation -a https://api.run.haas-202.pez.pivotal.io -u ${PCF_CREDS_USR} -p ${PCF_CREDS_PSW} -o dte-demo -s dev'
+                sh 'cf login -a https://donotuseapi.run.pivotal.io -u ${PCF_CREDS_USR} -p ${PCF_CREDS_PSW} -o dte-dev -s development'
                 sh 'cf push -f ci/manifest-dev.yml'
             }
         }

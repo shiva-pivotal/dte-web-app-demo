@@ -21,23 +21,19 @@ public class DTEWebAppTest {
     //@Parameters({"os", "browser", "url", "node"})
     public void setUp() throws MalformedURLException {
 
-        String url;
+        String url; 
 
         if(environment.equalsIgnoreCase("local")){
             url = "http://localhost:8087/";
         } else {
             if (tempRoute != null && !tempRoute.isEmpty() && tempRoute.equalsIgnoreCase("temp")) {
-                url = "http://dte-web-app-demo-" + environment + "-temp.cfapps.haas-202.pez.pivotal.io/";
+                url = "http://dte-web-app-demo-" + environment + "-temp.run.pivotal.io/";
             } else {
-                url = "http://dte-web-app-demo-" + environment + ".cfapps.haas-202.pez.pivotal.io/";
+                url = "http://dte-web-app-demo-" + environment + ".run.pivotal.io/";
             }
         }
-
-
         SetupTestDriver setupTestDriver = new SetupTestDriver("mac", browser, url);
-
         driver = setupTestDriver.getDriver();
-
     }
 
     @Test

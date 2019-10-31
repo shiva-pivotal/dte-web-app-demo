@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PCF_CREDS = credentials('pcfpez-dte-dev-creds')
+        PCF_CREDS = credentials('pcf-pws-creds')
     }
     stages {
         stage('Copy Archive') {
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 sh '''
 
-                    cf login --skip-ssl-validation -a https://api.run.haas-202.pez.pivotal.io -u ${PCF_CREDS_USR} -p ${PCF_CREDS_PSW} -o dte-demo -s prod
+                    cf login -a https://donotuseapi.run.pivotal.io -u ${PCF_CREDS_USR} -p ${PCF_CREDS_PSW} -o dte-dev -s prod
 
                     cf rename dte-web-app-demo dte-web-app-demo-previous
 
